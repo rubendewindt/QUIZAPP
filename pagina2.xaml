@@ -6,7 +6,14 @@
         xmlns:local="clr-namespace:QUIZAPP"
         mc:Ignorable="d"
         Title="Quiz Page" Height="450" Width="800">
-    <Grid Background="#FF3F51B5">
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#FF3F51B5" Offset="0"/>
+                <GradientStop Color="#FF7986CB" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
         <Label x:Name="vraag" Content="Question" HorizontalAlignment="Left" Margin="20" VerticalAlignment="Top" FontSize="24" Foreground="White"/>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <!-- Multiple Choice Options -->
@@ -18,7 +25,9 @@
             <RadioButton x:Name="trueOption" Content="True" Visibility="Collapsed" GroupName="TrueFalse" FontSize="20" Foreground="White" Margin="0 10" Click="Option_Click"/>
             <RadioButton x:Name="falseOption" Content="False" Visibility="Collapsed" GroupName="TrueFalse" FontSize="20" Foreground="White" Margin="0 10" Click="Option_Click"/>
         </StackPanel>
-        <Button x:Name="submitButton" Content="Submit" HorizontalAlignment="Left" Margin="600,350,0,0" VerticalAlignment="Top" Width="150" Height="50" FontSize="20" Background="#FFFF5722" Foreground="White" Visibility="Collapsed" Click="Submit_Click"/>
-        <Button Content="Next Question" HorizontalAlignment="Left" Margin="450,350,0,0" VerticalAlignment="Top" Width="150" Height="50" FontSize="20" Background="#FFFF5722" Foreground="White" Click="NextQuestion_Click"/>
+
+        <Button x:Name="submitButton" Content="Submit" HorizontalAlignment="Left" Margin="600,350,0,0" VerticalAlignment="Top" Width="150" Height="50" FontSize="20" Background="#FF607D8B" Foreground="White" Visibility="Collapsed" Click="Submit_Click"/>
+        <Button Content="Next Question" HorizontalAlignment="Left" Margin="450,350,0,0" VerticalAlignment="Top" Width="150" Height="50" FontSize="20" Background="#FF607D8B" Foreground="White" Click="NextQuestion_Click"/>
     </Grid>
 </Window>
+
