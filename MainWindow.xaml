@@ -15,14 +15,19 @@
         </Grid.Background>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock Text="QUIZ APP" FontSize="36" Foreground="White" Margin="0 0 0 20"/>
-            <ComboBox x:Name="categoryComboBox" Width="250" Height="40" FontSize="16" Margin="0 0 0 10" Background="#FF3F51B5" Foreground="White" BorderBrush="White">
+            <ComboBox x:Name="categoryComboBox" Width="250" Height="40" FontSize="16" Margin="0 0 0 10" Background="#FF3F51B5" Foreground="White" BorderBrush="White" SelectionChanged="CategoryComboBox_SelectionChanged">
                 <!-- Add ComboBox Items -->
             </ComboBox>
-            <ComboBox x:Name="difficultyComboBox" Width="250" Height="40" FontSize="16" Margin="0 0 0 10" Background="#FF3F51B5" Foreground="White" BorderBrush="White">
+            <ComboBox x:Name="difficultyComboBox" Width="250" Height="40" FontSize="16" Margin="0 0 0 10" Background="#FF3F51B5" Foreground="White" BorderBrush="White" SelectionChanged="DifficultyComboBox_SelectionChanged">
                 <!-- Add ComboBox Items -->
+                <ComboBoxItem>Easy</ComboBoxItem>
+                <ComboBoxItem>Medium</ComboBoxItem>
+                <ComboBoxItem>Hard</ComboBoxItem>
             </ComboBox>
-            <Button Content="Start Game" Width="200" Height="50" FontSize="20" Margin="0 20" Background="#FFFF5722" Foreground="White" BorderBrush="White" Click="FetchQuestionButton_Click"/>
+            <Button x:Name="startQuizButton" Content="Start Quiz" Width="200" Height="50" FontSize="20" Margin="0 20" Background="#FFFF5722" Foreground="White" BorderBrush="White" Click="StartQuizButton_Click"/>
         </StackPanel>
     </Grid>
 </Window>
+
+
 

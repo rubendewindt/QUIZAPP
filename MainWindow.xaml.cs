@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using Newtonsoft.Json.Linq;
 
 namespace QUIZAPP
@@ -9,31 +11,89 @@ namespace QUIZAPP
     public partial class MainWindow : Window
     {
         private string category;
-        private string correctAnswer;
+        private string selectedDifficulty; // Declare selectedDifficulty as a class-level variable
+        private Dictionary<string, int> categoryDictionary = new Dictionary<string, int>();
+        private int categoryId;
         private string question;
-
-        private JObject jsonData; // Class-level variable to store JSON data
+        private string correctAnswer;
+        private List<string> multipleChoiceOptions;
 
         public MainWindow()
         {
             InitializeComponent();
-            // Call InitializeAsync when the window is initialized
             InitializeAsync();
+            PopulateCategoryComboBox();
         }
 
         private async Task InitializeAsync()
         {
-            // Fetch categories and populate ComboBox
-            await FetchCategories();
+            // Provide a default category ID (e.g., the ID for "General Knowledge")
+            int defaultCategoryId = 9;
+            // Provide a default difficulty level (e.g., "medium")
+            selectedDifficulty = "medium"; // Initialize selectedDifficulty
+            // Fetch a question initially using the default category ID and default difficulty
+            await FetchQuestion(defaultCategoryId, selectedDifficulty);
 
-            // Fetch difficulties and populate ComboBox
-            await FetchDifficulties();
         }
 
-        private async Task FetchCategories()
+        private void PopulateCategoryComboBox()
         {
-            string[] categories = null;
-            string url = "https://opentdb.com/api_category.php";
+            // Populate the category dictionary with category names and their corresponding ids
+            categoryDictionary.Add("General Knowledge", 9);
+            categoryDictionary.Add("Entertainment: Books", 10);
+            categoryDictionary.Add("Entertainment: Film", 11);
+            categoryDictionary.Add("Entertainment: Music", 12);
+            categoryDictionary.Add("Entertainment: Musicals & Theatres", 13);
+            categoryDictionary.Add("Entertainment: Television", 14);
+            categoryDictionary.Add("Entertainment: Video Games", 15);
+            categoryDictionary.Add("Entertainment: Board Games", 16);
+            categoryDictionary.Add("Science & Nature", 17);
+            categoryDictionary.Add("Science: Computers", 18);
+            categoryDictionary.Add("Science: Mathematics", 19);
+            categoryDictionary.Add("Mythology", 20);
+            categoryDictionary.Add("Geography", 22);
+            categoryDictionary.Add("History", 23);
+            categoryDictionary.Add("Politics", 24);
+            categoryDictionary.Add("Art", 25);
+            categoryDictionary.Add("Celebrities", 26);
+            categoryDictionary.Add("Animals", 27);
+            categoryDictionary.Add("Vehicles", 28);
+            categoryDictionary.Add("Entertainment: Comics", 29);
+            categoryDictionary.Add("Science: Gadgets", 30);
+            categoryDictionary.Add("Entertainment: Japanese Anime & Manga", 31);
+            categoryDictionary.Add("Entertainment: Cartoon & Animations", 32);
+
+            // Add category names to the ComboBox
+            foreach (string categoryName in categoryDictionary.Keys)
+            {
+                categoryComboBox.Items.Add(categoryName);
+            }
+        }
+
+        private async void CategoryComboBox_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            // Set the categoryId based on the selected category
+            string selectedCategory = (string)categoryComboBox.SelectedItem;
+            if (categoryDictionary.ContainsKey(selectedCategory))
+            {
+                categoryId = categoryDictionary[selectedCategory];
+                // Call FetchQuestion with the selected category ID and default difficulty
+
+            }
+        }
+
+        private async void DifficultyComboBox_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            // Get the selected difficulty
+            selectedDifficulty = ((ComboBoxItem)difficultyComboBox.SelectedItem)?.Content?.ToString()?.ToLower();
+
+            // Enable the button if both category and difficulty are selected
+            
+        }
+
+        private async Task FetchQuestion(int categoryId, string difficulty)
+        {
+            string url = $"https://opentdb.com/api.php?amount=1&category={categoryId}&difficulty={difficulty}";
 
             using (HttpClient client = new HttpClient())
             {
@@ -45,52 +105,29 @@ namespace QUIZAPP
                     {
                         string json = await response.Content.ReadAsStringAsync();
                         JObject jsonData = JObject.Parse(json);
-                        categories = jsonData["trivia_categories"].Select(c => (string)c["name"]).ToArray();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Failed to fetch categories. Status code: " + response.StatusCode, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
 
-            if (categories != null)
-            {
-                categoryComboBox.ItemsSource = categories;
-            }
-        }
-
-        private async Task FetchDifficulties()
-        {
-            string[] difficulties = { "easy", "medium", "hard" }; // Pre-defined difficulty levels
-            difficultyComboBox.ItemsSource = difficulties;
-        }
-
-        private async Task FetchAPIData(string selectedCategory, string selectedDifficulty)
-        {
-            string url = $"https://opentdb.com/api.php?amount=1&category={selectedCategory}&difficulty={selectedDifficulty}";
-
-            using (HttpClient client = new HttpClient())
-            {
-                try
-                {
-                    HttpResponseMessage response = await client.GetAsync(url);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string json = await response.Content.ReadAsStringAsync();
-                        jsonData = JObject.Parse(json); // Store the JSON data
                         category = (string)jsonData["results"][0]["category"];
                         question = (string)jsonData["results"][0]["question"];
                         correctAnswer = (string)jsonData["results"][0]["correct_answer"];
+
+                        // Extract incorrect answers
+                        JArray incorrectAnswers = (JArray)jsonData["results"][0]["incorrect_answers"];
+                        multipleChoiceOptions = new List<string>();
+                        multipleChoiceOptions.Add(correctAnswer); // Add the correct answer
+                        foreach (var option in incorrectAnswers)
+                        {
+                            multipleChoiceOptions.Add((string)option);
+                        }
+
+                        // Shuffle options to randomize order
+                        ShuffleOptions();
+
+                        // Display the fetched question
+
                     }
                     else
                     {
-                        MessageBox.Show("Failed to fetch data. Status code: " + response.StatusCode, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Failed to fetch question. Status code: " + response.StatusCode, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
                 catch (Exception ex)
@@ -100,36 +137,43 @@ namespace QUIZAPP
             }
         }
 
-        private string DetermineQuestionType()
+        private void ShowQuestion()
         {
-            string questionType = (string)jsonData["results"][0]["type"];
-            switch (questionType)
+            // Display category, question, options, difficulty, and correct answer
+            MessageBox.Show($"Category: {category}\n\nQuestion: {question}\n\nOptions:\n{string.Join("\n", multipleChoiceOptions)}\n\nDifficulty: {selectedDifficulty}\n\nCorrect Answer: {correctAnswer}", "Question", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+
+        private void ShuffleOptions()
+        {
+            // Fisher-Yates shuffle algorithm
+            Random rng = new Random();
+            int n = multipleChoiceOptions.Count;
+            while (n > 1)
             {
-                case "multiple":
-                    return "Multiple Choice";
-                case "boolean":
-                    return "True/False";
-                default:
-                    return "Unknown"; // Add more cases as needed
+                n--;
+                int k = rng.Next(n + 1);
+                string value = multipleChoiceOptions[k];
+                multipleChoiceOptions[k] = multipleChoiceOptions[n];
+                multipleChoiceOptions[n] = value;
             }
         }
 
-        private async void FetchQuestionButton_Click(object sender, RoutedEventArgs e)
+        private void StartQuizButton_Click(object sender, RoutedEventArgs e)
         {
-            string selectedCategory = categoryComboBox.SelectedItem as string;
-            string selectedDifficulty = difficultyComboBox.SelectedItem as string;
-            if (!string.IsNullOrEmpty(selectedCategory) && !string.IsNullOrEmpty(selectedDifficulty))
+            // Check if both category and difficulty are selected
+            if (categoryComboBox.SelectedItem == null || string.IsNullOrEmpty(selectedDifficulty))
             {
-                await FetchAPIData(selectedCategory, selectedDifficulty);
-                string questionType = DetermineQuestionType();
-                pagina2 page2 = new pagina2(category, question, correctAnswer, questionType, selectedCategory, selectedDifficulty);
-                page2.Show();
-                this.Hide(); // Hide the main window
+                // Display an alert message prompting the user to select both options
+                MessageBox.Show("Please select both category and difficulty to start the quiz.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return; // Exit the method early if either option is not selected
             }
-            else
-            {
-                MessageBox.Show("Please select both a category and a difficulty level.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+
+            // Fetch the question if both options are selected
+            int selectedCategoryId = categoryDictionary[(string)categoryComboBox.SelectedItem];
+            FetchQuestion(selectedCategoryId, selectedDifficulty);
+            ShowQuestion();
         }
     }
 }
+
