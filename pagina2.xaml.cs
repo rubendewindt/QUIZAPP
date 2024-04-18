@@ -148,6 +148,7 @@ namespace QUIZAPP
 
                             trueOption.Content = "True";
                             falseOption.Content = "False";
+
                         }
                         else
                         {
