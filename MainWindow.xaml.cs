@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 using Newtonsoft.Json.Linq;
 
 namespace QUIZAPP
@@ -32,7 +33,7 @@ namespace QUIZAPP
             // Provide a default difficulty level (e.g., "medium")
             selectedDifficulty = "medium"; // Initialize selectedDifficulty
             // Fetch a question initially using the default category ID and default difficulty
-            await FetchQuestion(defaultCategoryId, selectedDifficulty);
+         
 
         }
 
@@ -159,7 +160,7 @@ namespace QUIZAPP
             }
         }
 
-        private void StartQuizButton_Click(object sender, RoutedEventArgs e)
+        private async void StartQuizButton_Click(object sender, RoutedEventArgs e)
         {
             // Check if both category and difficulty are selected
             if (categoryComboBox.SelectedItem == null || string.IsNullOrEmpty(selectedDifficulty))
@@ -171,9 +172,38 @@ namespace QUIZAPP
 
             // Fetch the question if both options are selected
             int selectedCategoryId = categoryDictionary[(string)categoryComboBox.SelectedItem];
-            FetchQuestion(selectedCategoryId, selectedDifficulty);
-            ShowQuestion();
+            await FetchQuestionAndNavigate(selectedCategoryId, selectedDifficulty);
         }
+
+        private async Task FetchQuestionAndNavigate(int categoryId, string difficulty)
+        {
+            await FetchQuestion(categoryId, difficulty);
+
+            // Determine the question type based on the fetched question
+            string questionType = ""; // Initialize questionType
+            if (multipleChoiceOptions != null && multipleChoiceOptions.Count > 2)
+            {
+                questionType = "multiple";
+            }
+            else
+            {
+                questionType = "truefalse";
+            }
+
+            // Navigate to pagina2.xaml and pass all the fetched data
+            pagina2 page2 = new pagina2();
+            page2.SetQuestionData(category, question, multipleChoiceOptions, selectedDifficulty, correctAnswer, questionType);
+            page2.Show();
+
+            // Close the current MainWindow
+            this.Close();
+        }
+
+
+
+
+
+
     }
 }
 

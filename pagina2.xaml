@@ -1,33 +1,29 @@
 ﻿<Window x:Class="QUIZAPP.pagina2"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:QUIZAPP"
-        mc:Ignorable="d"
-        Title="Quiz Page" Height="450" Width="800">
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="pagina2" Height="450" Width="800">
     <Grid>
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="#FF3F51B5" Offset="0"/>
-                <GradientStop Color="#FF7986CB" Offset="1"/>
+                <GradientStop Color="#3F51B5" Offset="0.1"/>
+                <GradientStop Color="#2196F3" Offset="0.9"/>
             </LinearGradientBrush>
         </Grid.Background>
 
-        <Label x:Name="vraag" Content="Question" HorizontalAlignment="Left" Margin="20" VerticalAlignment="Top" FontSize="24" Foreground="White"/>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <!-- Multiple Choice Options -->
-            <RadioButton x:Name="optionA" Content="Option A" Visibility="Collapsed" GroupName="MultipleChoice" FontSize="20" Foreground="White" Margin="0 10" Click="Option_Click"/>
-            <RadioButton x:Name="optionB" Content="Option B" Visibility="Collapsed" GroupName="MultipleChoice" FontSize="20" Foreground="White" Margin="0 10" Click="Option_Click"/>
-            <RadioButton x:Name="optionC" Content="Option C" Visibility="Collapsed" GroupName="MultipleChoice" FontSize="20" Foreground="White" Margin="0 10" Click="Option_Click"/>
+        <!-- Category -->
+        <TextBlock x:Name="CategoryTextBlock" Margin="10" FontSize="16" Height="30" Background="White"/>
 
-            <!-- True/False Options -->
-            <RadioButton x:Name="trueOption" Content="True" Visibility="Collapsed" GroupName="TrueFalse" FontSize="20" Foreground="White" Margin="0 10" Click="Option_Click"/>
-            <RadioButton x:Name="falseOption" Content="False" Visibility="Collapsed" GroupName="TrueFalse" FontSize="20" Foreground="White" Margin="0 10" Click="Option_Click"/>
-        </StackPanel>
+        <!-- Question -->
+        <TextBlock x:Name="QuestionTextBlock" Margin="10,50,0,0" FontSize="16" Height="30" Background="White"/>
 
-        <Button x:Name="submitButton" Content="Submit" HorizontalAlignment="Left" Margin="600,350,0,0" VerticalAlignment="Top" Width="150" Height="50" FontSize="20" Background="#FF607D8B" Foreground="White" Visibility="Collapsed" Click="Submit_Click"/>
-        <Button Content="Next Question" HorizontalAlignment="Left" Margin="450,350,0,0" VerticalAlignment="Top" Width="150" Height="50" FontSize="20" Background="#FF607D8B" Foreground="White" Click="NextQuestion_Click"/>
+        <!-- StackPanel to contain radio buttons -->
+        <StackPanel x:Name="OptionsStackPanel" Margin="10,100,10,0"/>
+
+        <!-- Difficulty -->
+        <TextBlock x:Name="DifficultyTextBlock" Margin="10,250,0,0" FontSize="16" Height="30" Background="White"/>
+
+        <!-- Correct Answer -->
+        <TextBlock x:Name="CorrectAnswerTextBlock" Margin="10,300,0,0" FontSize="16" Height="30" Background="White"/>
     </Grid>
 </Window>
 
