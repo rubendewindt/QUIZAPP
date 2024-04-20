@@ -3,6 +3,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="pagina2" Height="450" Width="800">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="109*"/>
+            <ColumnDefinition Width="448*"/>
+            <ColumnDefinition Width="243*"/>
+        </Grid.ColumnDefinitions>
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                 <GradientStop Color="#3F51B5" Offset="0.1"/>
@@ -11,19 +16,22 @@
         </Grid.Background>
 
         <!-- Category -->
-        <TextBlock x:Name="CategoryTextBlock" Margin="10" FontSize="16" Height="30" Background="White"/>
+        <TextBlock x:Name="CategoryTextBlock" Margin="10,202,10,202" FontSize="16" Height="30" Background="White" Grid.ColumnSpan="3"/>
 
         <!-- Question -->
-        <TextBlock x:Name="QuestionTextBlock" Margin="10,50,0,0" FontSize="16" Height="30" Background="White"/>
+        <TextBlock x:Name="QuestionTextBlock" Margin="10,227,0,177" FontSize="16" Height="30" Background="White" Grid.ColumnSpan="3"/>
 
         <!-- StackPanel to contain radio buttons -->
-        <StackPanel x:Name="OptionsStackPanel" Margin="10,100,10,0"/>
+        <StackPanel x:Name="OptionsStackPanel" Margin="10,100,10,0" Grid.ColumnSpan="3"/>
 
         <!-- Difficulty -->
-        <TextBlock x:Name="DifficultyTextBlock" Margin="10,250,0,0" FontSize="16" Height="30" Background="White"/>
+        <TextBlock x:Name="DifficultyTextBlock" Margin="10,327,0,77" FontSize="16" Height="30" Background="White" Grid.ColumnSpan="3"/>
 
         <!-- Correct Answer -->
-        <TextBlock x:Name="CorrectAnswerTextBlock" Margin="10,300,0,0" FontSize="16" Height="30" Background="White"/>
+        <TextBlock x:Name="CorrectAnswerTextBlock" Margin="10,352,0,52" FontSize="16" Height="30" Background="White" Grid.ColumnSpan="3"/>
+        <Button Content="Next Question" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="251,0,0,20" Click="NextQuestionButton_Click" Grid.Column="1"/>
+        <Button Content="Submit" Click="SubmitButton_Click" Margin="321,50,204,339" Grid.ColumnSpan="2" Grid.Column="1"/>
+        <TextBlock x:Name="ScoreTextBlock" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,10,10,0" FontSize="18" FontWeight="Bold" Grid.Column="2" />
     </Grid>
 </Window>
 

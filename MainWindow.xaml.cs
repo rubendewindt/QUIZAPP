@@ -199,11 +199,6 @@ namespace QUIZAPP
             this.Close();
         }
 
-
-
-
-
-
     }
 }
 
