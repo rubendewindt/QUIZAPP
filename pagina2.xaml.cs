@@ -119,7 +119,8 @@ namespace QUIZAPP
                 }
                 else
                 {
-                    MessageBox.Show("Wrong!", "Result", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Wrong! The correct answer is: {correctAnswer}", "Result", MessageBoxButton.OK, MessageBoxImage.Error);
+                    await FetchQuestionAndNavigate(categoryId, selectedDifficulty);
                 }
             }
             else
