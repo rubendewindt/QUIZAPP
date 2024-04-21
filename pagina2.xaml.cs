@@ -17,7 +17,7 @@ namespace QUIZAPP
         private int categoryId;
         private int score; // Added score field
         private DispatcherTimer timer; // Timer declaration
-        private int remainingTime = 30; // 10 minutes in seconds = 600
+        private int remainingTime = 300; // 10 minutes in seconds = 600
 
         public pagina2(string category, string selectedDifficulty, int categoryId)
         {
