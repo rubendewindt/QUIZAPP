@@ -221,6 +221,7 @@ namespace QUIZAPP
             // Pass the fetched category and difficulty to pagina2
             pagina2 page2 = new pagina2(category, selectedDifficulty, categoryId);
             page2.SetQuestionData(category, question, multipleChoiceOptions, selectedDifficulty, correctAnswer, "multiple");
+            await Task.Delay(1000);
             page2.Show();
 
             // Close the current MainWindow

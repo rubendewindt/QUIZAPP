@@ -31,9 +31,11 @@
             <!-- StackPanel for ComboBoxes and Button -->
             <StackPanel Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="QUIZ APP" FontSize="36" Foreground="White" Margin="0 0 0 20"/>
+                <Label Content="category:" HorizontalAlignment="Center" FontWeight="Bold" FontSize="16" Foreground="Black"/>
                 <ComboBox x:Name="categoryComboBox" Width="250" Height="40" FontSize="16" Margin="0 0 0 10" Background="#FF3F51B5" Foreground="Black" BorderBrush="White" SelectionChanged="CategoryComboBox_SelectionChanged">
                     <!-- Add ComboBox Items -->
                 </ComboBox>
+                <Label Content="difficulty:" HorizontalAlignment="Center" FontWeight="Bold" FontSize="16" Foreground="Black"/>
                 <ComboBox x:Name="difficultyComboBox" Width="250" Height="40" FontSize="16" Margin="0 0 0 10" Background="#FF3F51B5" Foreground="Black" BorderBrush="White" SelectionChanged="DifficultyComboBox_SelectionChanged">
                     <ComboBoxItem>Easy</ComboBoxItem>
                     <ComboBoxItem>Medium</ComboBoxItem>

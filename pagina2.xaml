@@ -33,7 +33,7 @@
         <TextBlock x:Name="CorrectAnswerTextBlock" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,290,0,0" Grid.ColumnSpan="3"/>
 
         <!-- Submit Button -->
-        <Button Content="Submit" Width="200" Height="50" FontSize="20" Margin="0 0 20 20" Background="#FFFF5722" Foreground="White" BorderBrush="White" Click="SubmitButton_Click" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Column="2"/>
+        <Button x:Name="SubmitButton" Content="Submit" Width="200" Height="50" FontSize="20" Margin="0 0 20 20" Background="#FFFF5722" Foreground="White" BorderBrush="White" Click="SubmitButton_Click" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Column="2"/>
 
         <!-- Score TextBlock -->
         <TextBlock x:Name="ScoreTextBlock" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,50" FontSize="18" FontWeight="Bold" Grid.Column="1"/>
@@ -42,7 +42,7 @@
         <TextBlock x:Name="TimerTextBlock" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20" FontSize="18" FontWeight="Bold" Grid.Column="1"/>
 
         <!-- Next Question Button -->
-        <Button Content="Next Question" Width="200" Height="50" FontSize="20" Margin="20 0 0 20" Background="#FFFF5722" Foreground="White" BorderBrush="White" Click="NextQuestionButton_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="0"/>
+        <Button x:Name="NextQuestionButton" Content="Next Question" Width="200" Height="50" FontSize="20" Margin="20 0 0 20" Background="#FFFF5722" Foreground="White" BorderBrush="White" Click="NextQuestionButton_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="0"/>
     </Grid>
 </Window>
 

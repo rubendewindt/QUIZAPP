@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
 using System.Net.Http;
-using System.Windows.Controls;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
-using System.Windows.Navigation;
 
 namespace QUIZAPP
 {
@@ -15,8 +17,7 @@ namespace QUIZAPP
         private int categoryId;
         private int score; // Added score field
         private DispatcherTimer timer; // Timer declaration
-        private int remainingTime = 300; // 10 minutes in seconds = 600
-
+        private int remainingTime = 30; // 10 minutes in seconds = 600
 
         public pagina2(string category, string selectedDifficulty, int categoryId)
         {
@@ -48,14 +49,13 @@ namespace QUIZAPP
                 timer.Stop();
                 MessageBox.Show("Time's up!", "Result", MessageBoxButton.OK, MessageBoxImage.Information);
 
-               
-
                 // Navigate to the EindeQiuz.xaml page
                 EindeQiuz eindeQiuzPage = new EindeQiuz(score, category); // Pass the score to the EindeQiuz page
                 eindeQiuzPage.Show(); // Display the EindeQiuz window modally
-               this.Close();
+                this.Close();
             }
         }
+
         private void UpdateTimerDisplay()
         {
             int minutes = remainingTime / 60;
@@ -68,6 +68,7 @@ namespace QUIZAPP
             this.correctAnswer = correctAnswer;
             this.category = category;
             this.selectedDifficulty = difficulty;
+
 
             CategoryTextBlock.Text = $"Category: {category}";
             QuestionTextBlock.Text = $"Question: {question}";
@@ -95,17 +96,26 @@ namespace QUIZAPP
             }
         }
 
-
-    private async Task FetchNextQuestion()
-    {
-        if (string.IsNullOrEmpty(category) || string.IsNullOrEmpty(selectedDifficulty))
+        private async Task FetchNextQuestion()
         {
-            MessageBox.Show("Category or difficulty is not selected.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-         }
+            if (string.IsNullOrEmpty(category) || string.IsNullOrEmpty(selectedDifficulty))
+            {
+                MessageBox.Show("Category or difficulty is not selected.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
-        await FetchQuestionAndNavigate(categoryId, selectedDifficulty); // Use the stored categoryId
-    }
+            // Disable buttons and radio buttons
+            NextQuestionButton.IsEnabled = false;
+            SubmitButton.IsEnabled = false;
+            foreach (var radioButton in OptionsStackPanel.Children.OfType<RadioButton>())
+            {
+                radioButton.IsEnabled = false;
+            }
+
+            // Add a delay before fetching the next question
+            await Task.Delay(1000); // Adjust the delay time as needed (in milliseconds)
+            await FetchQuestionAndNavigate(categoryId, selectedDifficulty); // Use the stored categoryId
+        }
 
         private async Task FetchQuestionAndNavigate(int categoryId, string difficulty)
         {
@@ -152,8 +162,15 @@ namespace QUIZAPP
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-        }
 
+            // Enable buttons and radio buttons after fetching is complete
+            NextQuestionButton.IsEnabled = true;
+            SubmitButton.IsEnabled = true;
+            foreach (var radioButton in OptionsStackPanel.Children.OfType<RadioButton>())
+            {
+                radioButton.IsEnabled = true;
+            }
+        }
 
         private async void SubmitButton_Click(object sender, RoutedEventArgs e)
         {
@@ -169,11 +186,13 @@ namespace QUIZAPP
                     ScoreTextBlock.Text = $"Score: {score}"; // Update the score display
 
                     // Call FetchQuestionAndNavigate method to fetch the next question
+                    await Task.Delay(1000); // Adjust the delay time as needed (in milliseconds)
                     await FetchQuestionAndNavigate(categoryId, selectedDifficulty);
                 }
                 else
                 {
                     MessageBox.Show($"Wrong! The correct answer is: {correctAnswer}", "Result", MessageBoxButton.OK, MessageBoxImage.Error);
+                    await Task.Delay(1000); // Adjust the delay time as needed (in milliseconds)
                     await FetchQuestionAndNavigate(categoryId, selectedDifficulty);
                 }
             }
@@ -182,7 +201,6 @@ namespace QUIZAPP
                 MessageBox.Show("Please select an option!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
-
 
         private void ShuffleOptions(List<string> options)
         {
@@ -197,7 +215,6 @@ namespace QUIZAPP
                 options[n] = value;
             }
         }
-
     }
 }
 
