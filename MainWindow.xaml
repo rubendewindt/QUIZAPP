@@ -13,21 +13,42 @@
                 <GradientStop Color="#2196F3" Offset="0.9"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <Frame x:Name="mainFrame" NavigationUIVisibility="Hidden"/>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock Text="QUIZ APP" FontSize="36" Foreground="White" Margin="0 0 0 20"/>
-            <ComboBox x:Name="categoryComboBox" Width="250" Height="40" FontSize="16" Margin="0 0 0 10" Background="#FF3F51B5" Foreground="Black" BorderBrush="White" SelectionChanged="CategoryComboBox_SelectionChanged">
-                <!-- Add ComboBox Items -->
-            </ComboBox>
-            <ComboBox x:Name="difficultyComboBox" Width="250" Height="40" FontSize="16" Margin="0 0 0 10" Background="#FF3F51B5" Foreground="Black" BorderBrush="White" SelectionChanged="DifficultyComboBox_SelectionChanged">
-                <ComboBoxItem>Easy</ComboBoxItem>
-                <ComboBoxItem>Medium</ComboBoxItem>
-                <ComboBoxItem>Hard</ComboBoxItem>
-            </ComboBox>
-            <Button x:Name="startQuizButton" Content="Start Quiz" Width="200" Height="50" FontSize="20" Margin="0 20" Background="#FFFF5722" Foreground="White" BorderBrush="White" Click="StartQuizButton_Click"/>
-        </StackPanel>
+
+        <!-- Main Grid with Rows and Columns -->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- TextBlock for "High Scores" -->
+            <TextBlock Text="High Scores" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="20" FontWeight="Bold" Foreground="Black" Margin="0,28,90,0" Grid.ColumnSpan="2"/>
+
+            <!-- StackPanel for ComboBoxes and Button -->
+            <StackPanel Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="QUIZ APP" FontSize="36" Foreground="White" Margin="0 0 0 20"/>
+                <ComboBox x:Name="categoryComboBox" Width="250" Height="40" FontSize="16" Margin="0 0 0 10" Background="#FF3F51B5" Foreground="Black" BorderBrush="White" SelectionChanged="CategoryComboBox_SelectionChanged">
+                    <!-- Add ComboBox Items -->
+                </ComboBox>
+                <ComboBox x:Name="difficultyComboBox" Width="250" Height="40" FontSize="16" Margin="0 0 0 10" Background="#FF3F51B5" Foreground="Black" BorderBrush="White" SelectionChanged="DifficultyComboBox_SelectionChanged">
+                    <ComboBoxItem>Easy</ComboBoxItem>
+                    <ComboBoxItem>Medium</ComboBoxItem>
+                    <ComboBoxItem>Hard</ComboBoxItem>
+                </ComboBox>
+                <Button x:Name="startQuizButton" Content="Start Quiz" Width="200" Height="50" FontSize="20" Margin="0 20" Background="#FFFF5722" Foreground="White" BorderBrush="White" Click="StartQuizButton_Click"/>
+            </StackPanel>
+
+            <!-- TextBlock for User Data -->
+            <TextBlock x:Name="UsersDataTextBlock" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="16" Foreground="White" TextWrapping="Wrap" Margin="0,0,20,20"/>
+        </Grid>
     </Grid>
 </Window>
+
+
 
 
 

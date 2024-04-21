@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using Newtonsoft.Json.Linq;
+using QUIZAPP.Data;
 
 namespace QUIZAPP
 {
@@ -71,6 +72,35 @@ namespace QUIZAPP
             }
         }
 
+        private void DisplayAllUserData()
+        {
+            try
+            {
+                using (var context = new QuizAppContext())
+                {
+                    // Retrieve top 10 user records from the selected category
+                    var topScores = context.Users
+                                          .Where(u => u.category == category)
+                                          .OrderByDescending(u => u.Score)
+                                          .Take(10)
+                                          .ToList();
+
+                    // Clear any existing data from the TextBlock
+                    UsersDataTextBlock.Text = "";
+
+                    // Iterate through each user record and append it to the TextBlock
+                    foreach (var user in topScores)
+                    {
+                        UsersDataTextBlock.Text += $"Name: {user.Name}, Score: {user.Score}\n";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error fetching user data: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private async void CategoryComboBox_SelectionChanged(object sender, RoutedEventArgs e)
         {
             // Set the categoryId based on the selected category
@@ -78,10 +108,13 @@ namespace QUIZAPP
             if (categoryDictionary.ContainsKey(selectedCategory))
             {
                 categoryId = categoryDictionary[selectedCategory];
-                // Call FetchQuestion with the selected category ID and default difficulty
-
+                category = selectedCategory; // Update the category variable
+                                             // Call DisplayAllUserData to display user data for the selected category
+                DisplayAllUserData();
             }
         }
+
+
 
         private async void DifficultyComboBox_SelectionChanged(object sender, RoutedEventArgs e)
         {
@@ -138,11 +171,6 @@ namespace QUIZAPP
             }
         }
 
-        private void ShowQuestion()
-        {
-            // Display category, question, options, difficulty, and correct answer
-            MessageBox.Show($"Category: {category}\n\nQuestion: {question}\n\nOptions:\n{string.Join("\n", multipleChoiceOptions)}\n\nDifficulty: {selectedDifficulty}\n\nCorrect Answer: {correctAnswer}", "Question", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
 
 
         private void ShuffleOptions()
@@ -190,9 +218,9 @@ namespace QUIZAPP
                 questionType = "truefalse";
             }
 
-            // Navigate to pagina2.xaml and pass all the fetched data
-            pagina2 page2 = new pagina2();
-            page2.SetQuestionData(category, question, multipleChoiceOptions, selectedDifficulty, correctAnswer, questionType);
+            // Pass the fetched category and difficulty to pagina2
+            pagina2 page2 = new pagina2(category, selectedDifficulty, categoryId);
+            page2.SetQuestionData(category, question, multipleChoiceOptions, selectedDifficulty, correctAnswer, "multiple");
             page2.Show();
 
             // Close the current MainWindow

@@ -2,6 +2,8 @@
 using System.Net.Http;
 using System.Windows.Controls;
 using System.Windows;
+using System.Windows.Threading;
+using System.Windows.Navigation;
 
 namespace QUIZAPP
 {
@@ -12,10 +14,53 @@ namespace QUIZAPP
         private string selectedDifficulty;
         private int categoryId;
         private int score; // Added score field
+        private DispatcherTimer timer; // Timer declaration
+        private int remainingTime = 300; // 10 minutes in seconds = 600
 
-        public pagina2()
+
+        public pagina2(string category, string selectedDifficulty, int categoryId)
         {
             InitializeComponent();
+            InitializeTimer(); // Initialize the timer
+            timer.Start();
+
+            // Store the category, difficulty, and categoryId for later use
+            this.category = category;
+            this.selectedDifficulty = selectedDifficulty;
+            this.categoryId = categoryId;
+        }
+
+        private void InitializeTimer()
+        {
+            timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1); // Timer ticks every second
+            timer.Tick += Timer_Tick;
+            UpdateTimerDisplay();
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            remainingTime--; // Decrement remaining time
+            UpdateTimerDisplay();
+
+            if (remainingTime == 0)
+            {
+                timer.Stop();
+                MessageBox.Show("Time's up!", "Result", MessageBoxButton.OK, MessageBoxImage.Information);
+
+               
+
+                // Navigate to the EindeQiuz.xaml page
+                EindeQiuz eindeQiuzPage = new EindeQiuz(score, category); // Pass the score to the EindeQiuz page
+                eindeQiuzPage.Show(); // Display the EindeQiuz window modally
+               this.Close();
+            }
+        }
+        private void UpdateTimerDisplay()
+        {
+            int minutes = remainingTime / 60;
+            int seconds = remainingTime % 60;
+            TimerTextBlock.Text = $"Time: {minutes:D2}:{seconds:D2}";
         }
 
         public void SetQuestionData(string category, string question, List<string> options, string difficulty, string correctAnswer, string questionType)
@@ -43,19 +88,24 @@ namespace QUIZAPP
 
         private async void NextQuestionButton_Click(object sender, RoutedEventArgs e)
         {
-            await FetchNextQuestion();
-        }
-
-        private async Task FetchNextQuestion()
-        {
-            if (string.IsNullOrEmpty(category) || string.IsNullOrEmpty(selectedDifficulty))
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to go to the next question?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
             {
-                MessageBox.Show("Category or difficulty is not selected.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
+                await FetchNextQuestion();
             }
-
-            await FetchQuestionAndNavigate(categoryId, selectedDifficulty);
         }
+
+
+    private async Task FetchNextQuestion()
+    {
+        if (string.IsNullOrEmpty(category) || string.IsNullOrEmpty(selectedDifficulty))
+        {
+            MessageBox.Show("Category or difficulty is not selected.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+         }
+
+        await FetchQuestionAndNavigate(categoryId, selectedDifficulty); // Use the stored categoryId
+    }
 
         private async Task FetchQuestionAndNavigate(int categoryId, string difficulty)
         {
@@ -79,13 +129,16 @@ namespace QUIZAPP
 
                         JArray incorrectAnswers = (JArray)jsonData["results"][0]["incorrect_answers"];
                         List<string> multipleChoiceOptions = new List<string>();
-                        multipleChoiceOptions.Add(correctAnswer);
                         foreach (var option in incorrectAnswers)
                         {
                             multipleChoiceOptions.Add((string)option);
                         }
 
-                        ShuffleOptions();
+                        // Add the correct answer
+                        multipleChoiceOptions.Add(correctAnswer);
+
+                        // Shuffle options to randomize order
+                        ShuffleOptions(multipleChoiceOptions);
 
                         SetQuestionData(fetchedCategory, question, multipleChoiceOptions, selectedDifficulty, correctAnswer, "multiple");
                     }
@@ -100,6 +153,7 @@ namespace QUIZAPP
                 }
             }
         }
+
 
         private async void SubmitButton_Click(object sender, RoutedEventArgs e)
         {
@@ -130,19 +184,20 @@ namespace QUIZAPP
         }
 
 
-        private void ShuffleOptions()
+        private void ShuffleOptions(List<string> options)
         {
             Random rng = new Random();
-            int n = OptionsStackPanel.Children.Count;
+            int n = options.Count;
             while (n > 1)
             {
                 n--;
                 int k = rng.Next(n + 1);
-                UIElement value = OptionsStackPanel.Children[k];
-                OptionsStackPanel.Children.RemoveAt(k);
-                OptionsStackPanel.Children.Insert(n, value);
+                string value = options[k];
+                options[k] = options[n];
+                options[n] = value;
             }
         }
+
     }
 }
 
